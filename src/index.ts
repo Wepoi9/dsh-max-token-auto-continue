@@ -48,20 +48,13 @@ function renderError(error: unknown): string {
 export function apply(ctx: Context, rawConfig: PluginConfig = {}) {
   const enabled = rawConfig.enabled ?? true
   const maxConsecutive = rawConfig.maxConsecutive ?? 3
-  const states = new Map<string, SessionState>()
+  const states = new WeakMap<Session, SessionState>()
 
-  ctx.effect(
-    () => () => {
-      states.clear()
-    },
-    `${name}:state`,
-  )
-
-  const stateFor = (sessionId: string): SessionState => {
-    let state = states.get(sessionId)
+  const stateFor = (session: Session): SessionState => {
+    let state = states.get(session)
     if (state === undefined) {
       state = { consecutive: 0, generation: 0 }
-      states.set(sessionId, state)
+      states.set(session, state)
     }
     return state
   }
@@ -144,20 +137,20 @@ export function apply(ctx: Context, rawConfig: PluginConfig = {}) {
     switch (event.type) {
       case 'user/message': {
         if (event.data.source.kind !== 'user') return
-        const state = stateFor(session.id)
+        const state = stateFor(session)
         state.generation += 1
         state.pendingTurn = undefined
         state.consecutive = 0
         return
       }
       case 'turn/start': {
-        const state = stateFor(session.id)
+        const state = stateFor(session)
         state.generation += 1
         state.pendingTurn = undefined
         return
       }
       case 'turn/end': {
-        const state = stateFor(session.id)
+        const state = stateFor(session)
         if (event.data.reason.kind !== 'max-tokens') {
           state.pendingTurn = undefined
           state.consecutive = 0

@@ -69,9 +69,6 @@ function makeCtx(
     on(_type: string, listener: (session: TestSession, event: unknown) => void) {
       listeners.push(listener)
     },
-    effect(execute: () => () => void) {
-      execute()
-    },
     logger: {
       warn() {},
     },

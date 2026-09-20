@@ -31,7 +31,7 @@ npm run build
 npm test
 ```
 
-- TypeScriptを `lib/` にコンパイルする（配用は `lib/src/index.js`）。DSHの型パッケージはdevDependenciesで解決するため、リポジトリ内で自己完結してビルドできる。
+- TypeScriptを `lib/` にコンパイルする（配布用は `lib/src/index.js`）。DSHの型パッケージはdevDependenciesで解決するため、リポジトリ内で自己完結してビルドできる。
 - `@deepseek-ai/dsh-llm` は実行時、DSHプロセスエントリ（`process.argv[1]`）から解決する（`dsh-session-title-after-turn` と同じ方式）。
 - テストは `node:test` 12件。
 

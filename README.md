@@ -14,8 +14,6 @@ DSHホスト側プラグイン。ルートエージェントのturnが `turn/end
 - 異常時はfail-closed（停止）。永続化・UI・ネットワーク再試行なし
 - `maxConsecutive` は通常セッションとgoalの両方に適用する
 
-設計書: `DSH Auto Retry.md`（0.1.5-rc.2向け、0.1.6-alpha.2の実体APIで検証済み）
-
 ## 設定
 
 |設定|既定値|意味|

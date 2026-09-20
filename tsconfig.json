@@ -9,25 +9,7 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@deepseek-ai/cordis": [
-        "../dsh-runtime-0.1.6-alpha.2/node_modules/@deepseek-ai/cordis/lib/types/index.d.ts"
-      ],
-      "@deepseek-ai/dsh-agent": [
-        "../dsh-runtime-0.1.6-alpha.2/node_modules/@deepseek-ai/dsh-agent/lib/types/index.d.ts"
-      ],
-      "@deepseek-ai/dsh-goal": [
-        "../dsh-runtime-0.1.6-alpha.2/node_modules/@deepseek-ai/dsh-goal/lib/types/index.d.ts"
-      ],
-      "@deepseek-ai/dsh-session": [
-        "../dsh-runtime-0.1.6-alpha.2/node_modules/@deepseek-ai/dsh-session/lib/types/index.d.ts"
-      ],
-      "@deepseek-ai/dsh-llm": [
-        "../dsh-runtime-0.1.6-alpha.2/node_modules/@deepseek-ai/dsh-llm/lib/types/index.d.ts"
-      ]
-    }
+    "types": ["node"]
   },
   "include": ["src", "tests"]
 }

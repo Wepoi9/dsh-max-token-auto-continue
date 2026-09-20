@@ -81,7 +81,9 @@ export function apply(ctx: Context, rawConfig: PluginConfig = {}) {
     try {
       await agent.whenIdle()
     } catch {
-      state.pendingTurn = undefined
+      if (state.generation === ticket && state.pendingTurn === turn) {
+        state.pendingTurn = undefined
+      }
       return
     }
     if (state.generation !== ticket || state.pendingTurn !== turn) return

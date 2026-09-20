@@ -25,11 +25,12 @@ interface TestAgent {
   followup: (message: TextMessage) => void
   whenIdle: () => Promise<void>
   settle: () => void
+  rejectOldest: () => void
 }
 
 function makeAgent(sessionId: string): { agent: TestAgent; session: TestSession } {
   const session: TestSession = { id: sessionId }
-  const resolvers: Array<() => void> = []
+  const waiters: Array<{ resolve: () => void; reject: (error: Error) => void }> = []
   const agent: TestAgent = {
     id: sessionId,
     session,
@@ -38,12 +39,15 @@ function makeAgent(sessionId: string): { agent: TestAgent; session: TestSession 
       agent.followups.push(message)
     },
     whenIdle() {
-      return new Promise<void>((resolve) => {
-        resolvers.push(resolve)
+      return new Promise<void>((resolve, reject) => {
+        waiters.push({ resolve, reject })
       })
     },
     settle() {
-      while (resolvers.length > 0) resolvers.shift()!()
+      while (waiters.length > 0) waiters.shift()!.resolve()
+    },
+    rejectOldest() {
+      waiters.shift()?.reject(new Error('idle wait failed'))
     },
   }
   return { agent, session }
@@ -217,6 +221,27 @@ test('a new turn while pending cancels the continuation', async () => {
   assert.equal(agent.followups.length, 0)
   emit(session, turnEndMax(2))
   await driveToIdle(agent)
+  assert.equal(agent.followups.length, 1)
+})
+
+test('stale idle rejection cannot clear a newer pending continuation', async () => {
+  const { agent, session } = makeAgent('sess-1')
+  const { ctx, emit } = makeCtx({ [agent.id]: agent }, [agent], {
+    goal: undefined,
+    throws: false,
+    resumes: [],
+  })
+  applyWith(ctx)
+  emit(session, turnEndMax(1))
+  await flush()
+  emit(session, turnStart(2))
+  emit(session, turnEndMax(2))
+  await flush()
+  agent.rejectOldest()
+  await flush()
+  assert.equal(agent.followups.length, 0)
+  agent.settle()
+  await flush()
   assert.equal(agent.followups.length, 1)
 })
 

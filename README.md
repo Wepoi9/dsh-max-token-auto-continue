@@ -11,6 +11,7 @@ DSHホスト側プラグイン。ルートエージェントのturnが `turn/end
 - ルートエージェントのみ対象（subagentのturnは自動継続しない）
 - `paused` / `blocked` / `complete` / `active` + `armed` のgoalでは何も送らない
 - 人間の新しい入力、新しいturn開始で保留中の継続は破棄される
+- プラグインの無効化・アンロード時は保留中の継続も無効化する
 - 異常時はfail-closed（停止）。永続化・UI・ネットワーク再試行なし
 - `maxConsecutive` は通常セッションとgoalの両方に適用する
 
@@ -33,10 +34,16 @@ npm test
 
 - TypeScriptを `lib/` にコンパイルする（配布用は `lib/src/index.js`）。DSHの型パッケージはdevDependenciesで解決するため、リポジトリ内で自己完結してビルドできる。
 - `@deepseek-ai/dsh-llm` は実行時、DSHプロセスエントリ（`process.argv[1]`）から解決する（`dsh-session-title-after-turn` と同じ方式）。
-- テストは `node:test` 12件。
+- テストは `node:test` 13件。
 
 ## インストール
 
-web profile に `link:` 依存 + `dsh.profile.bundles` として登録済み。
-変更後は profile ディレクトリで `pnpm install` し、DSHを再起動する。
-設定を上書きする場合、profileの `cordis.patch.yml` に id `dsh-max-token-auto-continue` のconfigエントリを追加する。
+DSH 0.1.6-alpha.2 のprofile plugin経路を使う。対象profileへローカルcheckoutを追加する。
+
+```sh
+dsh plugin --profile <profile> add <path-to-this-repository>
+dsh --profile <profile> --dump-config
+```
+
+例: Web profileを使う場合は `<profile>` を `web` に置き換える。bundle宣言により依存追加と `dsh.profile.bundles` への登録はDSH側が行う。
+設定を上書きする場合は、対象profileの `cordis.patch.yml` に id `dsh-max-token-auto-continue` のconfigエントリを追加する。

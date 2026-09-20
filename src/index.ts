@@ -49,6 +49,11 @@ export function apply(ctx: Context, rawConfig: PluginConfig = {}) {
   const enabled = rawConfig.enabled ?? true
   const maxConsecutive = rawConfig.maxConsecutive ?? 3
   const states = new WeakMap<Session, SessionState>()
+  let active = true
+
+  ctx.effect(() => () => {
+    active = false
+  })
 
   const stateFor = (session: Session): SessionState => {
     let state = states.get(session)
@@ -78,14 +83,16 @@ export function apply(ctx: Context, rawConfig: PluginConfig = {}) {
     ticket: number,
     turn: number,
   ): Promise<void> => {
+    if (!active) return
     try {
       await agent.whenIdle()
     } catch {
-      if (state.generation === ticket && state.pendingTurn === turn) {
+      if (active && state.generation === ticket && state.pendingTurn === turn) {
         state.pendingTurn = undefined
       }
       return
     }
+    if (!active) return
     if (state.generation !== ticket || state.pendingTurn !== turn) return
     if (ctx.agents.get(session.id) !== agent) return
     if (!ctx.agents.roots().includes(agent)) return
@@ -136,6 +143,7 @@ export function apply(ctx: Context, rawConfig: PluginConfig = {}) {
   }
 
   ctx.on('session/event', (session: Session, event: SessionEvent) => {
+    if (!active) return
     switch (event.type) {
       case 'user/message': {
         if (event.data.source.kind !== 'user') return

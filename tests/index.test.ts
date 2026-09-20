@@ -65,9 +65,14 @@ function makeCtx(
   goals: TestGoals,
 ) {
   const listeners: Array<(session: TestSession, event: unknown) => void> = []
+  const effects: Array<() => void> = []
   const ctx = {
     on(_type: string, listener: (session: TestSession, event: unknown) => void) {
       listeners.push(listener)
+    },
+    effect(execute: () => void | (() => void)) {
+      const cleanup = execute()
+      if (typeof cleanup === 'function') effects.push(cleanup)
     },
     logger: {
       warn() {},
@@ -90,7 +95,10 @@ function makeCtx(
   const emit = (session: TestSession, event: unknown) => {
     for (const listener of [...listeners]) listener(session, event)
   }
-  return { ctx, emit }
+  const dispose = () => {
+    while (effects.length > 0) effects.pop()!()
+  }
+  return { ctx, emit, dispose }
 }
 
 const flush = (): Promise<void> => new Promise((resolve) => setImmediate(resolve))
@@ -240,6 +248,22 @@ test('stale idle rejection cannot clear a newer pending continuation', async () 
   agent.settle()
   await flush()
   assert.equal(agent.followups.length, 1)
+})
+
+test('plugin unload cancels a pending continuation', async () => {
+  const { agent, session } = makeAgent('sess-1')
+  const { ctx, emit, dispose } = makeCtx({ [agent.id]: agent }, [agent], {
+    goal: undefined,
+    throws: false,
+    resumes: [],
+  })
+  applyWith(ctx)
+  emit(session, turnEndMax(1))
+  await flush()
+  dispose()
+  agent.settle()
+  await flush()
+  assert.equal(agent.followups.length, 0)
 })
 
 test('active disarmed goal resumes through GoalService instead of followup', async () => {

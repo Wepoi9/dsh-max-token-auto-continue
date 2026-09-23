@@ -151,7 +151,7 @@ test('completed turn end does nothing', async () => {
   assert.equal(agent.followups.length, 0)
 })
 
-test('max-tokens schedules one plugin-sourced followup', async () => {
+test('max-tokens schedules one producer-sourced followup', async () => {
   const { agent, session } = makeAgent('sess-1')
   const { ctx, emit } = makeCtx({ [agent.id]: agent }, [agent], {
     goal: undefined,
@@ -166,8 +166,7 @@ test('max-tokens schedules one plugin-sourced followup', async () => {
   assert.equal(message.role, 'user')
   assert.equal(typeof message.id, 'string')
   assert.ok(message.id.length > 0)
-  assert.equal(message.source.kind, 'plugin')
-  assert.equal(message.source.plugin, name)
+  assert.equal(message.source.kind, name)
   assert.equal(message.source.form, 'notice')
   assert.equal(message.content.length, 1)
   assert.equal(message.content[0].text, CONTINUE_TEXT)

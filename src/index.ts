@@ -5,7 +5,16 @@ import z from '@deepseek-ai/schemastery'
 import type { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import type { GoalView } from '@deepseek-ai/dsh-goal'
+import type { ContextFormed } from '@deepseek-ai/dsh-llm'
 import type { Session, SessionEvent } from '@deepseek-ai/dsh-session'
+
+declare module '@deepseek-ai/dsh-llm' {
+  interface MessageSourceMap {
+    'dsh-max-token-auto-continue': {
+      readonly kind: 'dsh-max-token-auto-continue'
+    } & ContextFormed
+  }
+}
 
 export const name = 'dsh-max-token-auto-continue'
 export const inject = ['agents', 'goals']
@@ -32,7 +41,7 @@ if (typeof entry !== 'string' || entry.length === 0) {
 const runtimeRequire = createRequire(entry)
 const dshLlm = await import(
   pathToFileURL(runtimeRequire.resolve('@deepseek-ai/dsh-llm')).href,
-)
+) as typeof import('@deepseek-ai/dsh-llm')
 const { createUserMessage } = dshLlm
 
 interface SessionState {
@@ -126,8 +135,7 @@ export function apply(ctx: Context, rawConfig: PluginConfig = {}) {
     const message = createUserMessage({
       content: [{ type: 'text', text: CONTINUE_TEXT }],
       source: {
-        kind: 'plugin',
-        plugin: name,
+        kind: name,
         form: 'notice',
         summary: CONTINUE_SUMMARY,
       },

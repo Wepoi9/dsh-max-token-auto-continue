@@ -2,12 +2,12 @@
 
 DSHホスト側プラグイン。ルートエージェントのturnが `turn/end` reason `max-tokens` で終わったとき、エージェントが収束したあと（`agent.whenIdle()`）自動的に1回だけ継続を送る。
 
-- 通常セッション → `agent.followup()`（`source.kind: "plugin"` のユーザーメッセージ）
+- 通常セッション → `agent.followup()`（`source.kind: "dsh-max-token-auto-continue"` のユーザーメッセージ）
 - `active` + `disarmed` の `/goal` → `GoalService.resume()`（目標の正式経路）
 
 ## 仕様
 
-- 人間の入力を偽装しない（`source.kind: "plugin"`、`form: "notice"`）
+- 人間の入力を偽装しない（`source.kind: "dsh-max-token-auto-continue"`、`form: "notice"`）
 - ルートエージェントのみ対象（subagentのturnは自動継続しない）
 - `paused` / `blocked` / `complete` / `active` + `armed` のgoalでは何も送らない
 - 人間の新しい入力、新しいturn開始で保留中の継続は破棄される
@@ -38,7 +38,7 @@ npm test
 
 ## インストール
 
-DSH 0.1.6-alpha.2 のprofile plugin経路を使う。対象profileへローカルcheckoutを追加する。
+DSH 0.1.6-alpha.2 / 0.1.7-alpha.2 のprofile plugin経路を使う。対象profileへローカルcheckoutを追加する。
 
 ```sh
 dsh plugin --profile <profile> add <path-to-this-repository>

@@ -38,7 +38,7 @@ npm test
 
 ## インストール
 
-DSH 0.1.6-alpha.2 / 0.1.7-alpha.2 / 0.1.7-rc.1 のprofile plugin経路を使う。0.1.7-alpha.2 / 0.1.7-rc.1 ではプラグイン読み込みと一覧表示を確認済み。0.1.7-rc.1 での自動継続の実発火は未確認。対象profileへローカルcheckoutを追加する。
+DSH 0.1.6-alpha.2 / 0.1.7-alpha.2 / 0.1.7-rc.1 / 0.1.7-rc.2 のprofile plugin経路を使う。0.1.7-alpha.2 / 0.1.7-rc.1 / 0.1.7-rc.2 ではプラグイン読み込みと一覧表示を確認済み。0.1.7-rc.2 での自動継続の実発火は未確認。対象profileへローカルcheckoutを追加する。
 
 ```sh
 dsh plugin --profile <profile> add <path-to-this-repository>

@@ -38,7 +38,7 @@ npm test
 
 ## インストール
 
-DSH 0.1.6-alpha.2 / 0.1.7-alpha.2 / 0.1.7-rc.1 / 0.1.7-rc.2 / 0.2.0-rc.1 / 0.2.0-rc.2 のprofile plugin経路を使う。0.1.7-alpha.2 / 0.1.7-rc.1 / 0.1.7-rc.2 ではプラグイン読み込みと一覧表示を確認済み。0.2.0-rc.1 ではプラグイン読み込み・一覧表示に加え、Autoretry（max-tokens後の自動継続）を実機E2Eで確認済み。0.2.0-rc.2 ではプラグイン読み込みと一覧表示を確認済み。対象profileへローカルcheckoutを追加する。
+このプラグインはDSH 0.1.6-alpha.2、0.1.7-alpha.2、0.1.7-rc.1、0.1.7-rc.2、0.2.0-rc.1、0.2.0-rc.2、0.2.1-alpha.1を対象とする。0.1.7-alpha.2 / 0.1.7-rc.1 / 0.1.7-rc.2 ではプラグイン読み込みと一覧表示を確認済み。0.2.0-rc.1 ではプラグイン読み込み・一覧表示に加え、Autoretry（max-tokens後の自動継続）を実機E2Eで確認済み。0.2.0-rc.2 ではプラグイン読み込みと一覧表示を確認済み。0.2.1-alpha.1では対象の型パッケージでビルドと13件のテストが成功し、Web profileの設定出力と起動ログでプラグインの読み込みを確認した。0.2.1-alpha.1での自動継続とGoal再開の実発火は未確認である。Schedule機能は0.2.0-rc.1以降で任意bundleとなったが、このprofileには追加していない。導入時は対象profileにローカルcheckoutを登録する。
 
 ```sh
 dsh plugin --profile <profile> add <path-to-this-repository>

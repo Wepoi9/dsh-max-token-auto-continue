@@ -3,7 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "description": "DSH host plugin: auto-continue once after a root agent turn ends with max-tokens (agent.followup for normal sessions, GoalService.resume for active/disarmed goals).",
+  "description": "Community DSH host plugin that continues root-agent sessions after max-token truncation.",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "auto-continue",
+    "llm-agent"
+  ],
+  "engines": {
+    "dsh": "0.1.6-alpha.2 || 0.1.7-alpha.2 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-alpha.1"
+  },
   "type": "module",
   "main": "lib/src/index.js",
   "exports": {
@@ -38,6 +48,7 @@
     "typescript": "^5.5.0"
   },
   "dsh": {
+    "manifestVersion": 1,
     "bundle": {
       "patch": "./cordis.patch.yml"
     }

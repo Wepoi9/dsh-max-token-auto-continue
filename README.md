@@ -1,49 +1,100 @@
 # dsh-max-token-auto-continue
 
-DSHホスト側プラグイン。ルートエージェントのturnが `turn/end` reason `max-tokens` で終わったとき、エージェントが収束したあと（`agent.whenIdle()`）自動的に1回だけ継続を送る。
+English | [日本語](README.ja.md)
 
-- 通常セッション → `agent.followup()`（`source.kind: "dsh-max-token-auto-continue"` のユーザーメッセージ）
-- `active` + `disarmed` の `/goal` → `GoalService.resume()`（目標の正式経路）
+A community host plugin for DeepSeek Harness (DSH) that automatically continues a root-agent session after a turn ends because the model reached its maximum output-token limit.
 
-## 仕様
+> This is a community-maintained plugin, not part of the DeepSeek Harness core distribution.
 
-- 人間の入力を偽装しない（`source.kind: "dsh-max-token-auto-continue"`、`form: "notice"`）
-- ルートエージェントのみ対象（subagentのturnは自動継続しない）
-- `paused` / `blocked` / `complete` / `active` + `armed` のgoalでは何も送らない
-- 人間の新しい入力、新しいturn開始で保留中の継続は破棄される
-- プラグインの無効化・アンロード時は保留中の継続も無効化する
-- 異常時はfail-closed（停止）。永続化・UI・ネットワーク再試行なし
-- `maxConsecutive` は通常セッションとgoalの両方に適用する
+## Behavior
 
-## 設定
+When a root-agent turn ends with `turn/end` reason `max-tokens`, the plugin waits for the agent to become idle and then continues through the appropriate DSH path:
 
-|設定|既定値|意味|
-|---|---|---|
-|`enabled`|`true`|自動継続の総スイッチ|
-|`maxConsecutive`|`3`|連続max-tokenチェーンあたりの最大自動継続回数|
+- normal session: `agent.followup()`;
+- active, disarmed `/goal`: `GoalService.resume()`.
 
-Continue文章と遅延は設定にしない（固定値）。
+The continuation is bounded by `maxConsecutive` and is cancelled when newer human input or a newer turn supersedes the pending continuation.
 
-## ビルド・テスト
+## Safety properties
 
-```
+- Root agents only; subagent turns are not auto-continued.
+- Human input is not impersonated. Generated follow-ups use `source.kind: "dsh-max-token-auto-continue"` and `form: "notice"`.
+- No action is taken for paused, blocked, complete, or active+armed goals.
+- Pending continuation is invalidated by newer human input, a newer turn, plugin unload, or plugin disable.
+- Failures stop the continuation path instead of retrying indefinitely.
+- No persistence, UI automation, background network retry, or external network access is implemented.
+
+## Configuration
+
+| Setting | Default | Meaning |
+| --- | ---: | --- |
+| `enabled` | `true` | Enables automatic continuation |
+| `maxConsecutive` | `3` | Maximum automatic continuations in one consecutive max-token chain |
+
+The continuation text and delay are intentionally fixed rather than configurable.
+
+## Compatibility
+
+Latest tested DSH version: **0.2.1-alpha.1**.
+
+| DSH version | Verification |
+| --- | --- |
+| 0.1.6-alpha.2 | Supported compatibility target |
+| 0.1.7-alpha.2 | Plugin load and inventory visibility verified |
+| 0.1.7-rc.1 | Plugin load and inventory visibility verified |
+| 0.1.7-rc.2 | Plugin load and inventory visibility verified |
+| 0.2.0-rc.1 | Plugin load, inventory visibility, and real max-token auto-continue E2E verified |
+| 0.2.0-rc.2 | Plugin load and inventory visibility verified |
+| 0.2.1-alpha.1 | Build, 13 tests, Web-profile config output, and startup load verified |
+
+Actual auto-continue and Goal resume firing on **0.2.1-alpha.1** has not yet been re-verified. Newer DSH versions are not assumed compatible until verified.
+
+## Install
+
+Install dependencies and build:
+
+```sh
 npm install
 npm run build
 npm test
 ```
 
-- TypeScriptを `lib/` にコンパイルする（配布用は `lib/src/index.js`）。DSHの型パッケージはdevDependenciesで解決するため、リポジトリ内で自己完結してビルドできる。
-- `@deepseek-ai/dsh-llm` は実行時、DSHプロセスエントリ（`process.argv[1]`）から解決する（`dsh-session-title-after-turn` と同じ方式）。
-- テストは `node:test` 13件。
-
-## インストール
-
-このプラグインはDSH 0.1.6-alpha.2、0.1.7-alpha.2、0.1.7-rc.1、0.1.7-rc.2、0.2.0-rc.1、0.2.0-rc.2、0.2.1-alpha.1を対象とする。0.1.7-alpha.2 / 0.1.7-rc.1 / 0.1.7-rc.2 ではプラグイン読み込みと一覧表示を確認済み。0.2.0-rc.1 ではプラグイン読み込み・一覧表示に加え、Autoretry（max-tokens後の自動継続）を実機E2Eで確認済み。0.2.0-rc.2 ではプラグイン読み込みと一覧表示を確認済み。0.2.1-alpha.1では対象の型パッケージでビルドと13件のテストが成功し、Web profileの設定出力と起動ログでプラグインの読み込みを確認した。0.2.1-alpha.1での自動継続とGoal再開の実発火は未確認である。Schedule機能は0.2.0-rc.1以降で任意bundleとなったが、このprofileには追加していない。導入時は対象profileにローカルcheckoutを登録する。
+Add the local checkout to the target profile:
 
 ```sh
-dsh plugin --profile <profile> add <path-to-this-repository>
+dsh plugin --profile <profile> add <absolute-path-to-this-repository>
 dsh --profile <profile> --dump-config
 ```
 
-例: Web profileを使う場合は `<profile>` を `web` に置き換える。bundle宣言により依存追加と `dsh.profile.bundles` への登録はDSH側が行う。
-設定を上書きする場合は、対象profileの `cordis.patch.yml` に id `dsh-max-token-auto-continue` のconfigエントリを追加する。
+For the Web profile, replace `<profile>` with `web`.
+
+The bundle declaration lets DSH add the required profile entries. To override plugin settings, add a config entry with id `dsh-max-token-auto-continue` to the target profile's `cordis.patch.yml`.
+
+## Operational note
+
+This plugin intentionally continues work after an output truncation without waiting for another human message. That is useful for long agent tasks, but it can also extend an unintended task if the model reaches `max-tokens` while already heading in the wrong direction.
+
+The main bounds are root-agent-only scope, supersession by newer input/turns, fail-closed behavior, and `maxConsecutive`.
+
+## Build and test
+
+```sh
+npm run build
+npm test
+```
+
+TypeScript is compiled to `lib/`; the distributable plugin entry is `lib/src/index.js`.
+
+`@deepseek-ai/dsh-llm` is resolved at runtime from the DSH process entry so the plugin uses the host runtime copy.
+
+## Privacy
+
+The plugin does not persist session data and does not send data to external services. Its only session mutation is the bounded continuation message or Goal resume call described above.
+
+## Contributing
+
+Bug reports and focused pull requests are welcome. For compatibility reports, include the DSH version, profile, whether the session was a normal session or `/goal`, the observed `turn/end` reason, and whether a continuation was expected.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

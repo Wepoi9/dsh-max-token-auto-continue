@@ -47,7 +47,7 @@ DeepSeek Harness（DSH）のコミュニティ向け Host プラグインです�
 | 0.2.0-rc.2 | 読み込み、一覧表示 |
 | 0.2.1-alpha.1 | ビルド、13件のテスト、Web profile の設定出力、起動時読み込み |
 | 0.2.1-alpha.2 | `engines.dsh` と DSH `peerDependencies` に対応対象として追加済み。DSH本体の関連APIはソース上で照合済み。ただし、この版での実機読み込み、更新済み依存環境でのビルド・テスト、自動継続と Goal 再開の実発火 E2E は **未確認** |
-| 0.2.1-alpha.3 | 0.2.1-alpha.3 依存系で build と 13 テスト通過（2026-10-15）。web profile に一覧表示され、起動時の plugin エラーなし。実 auto-continue と Goal 再開の発火 E2E は **未確認** |
+| 0.2.1-alpha.3 | 0.2.1-alpha.3 依存系で build と 13 テスト通過（2026-10-15）。web profile に一覧表示され、起動時の plugin エラーなし。通常 session での max-tokens 後自動継続の実発火（max-tokens 終了 4 回、`form: "notice"` の continuation splice ちょうど 3 回、`maxConsecutive` で停止）と `--session-id` 採用 headless での Goal 再開（Goal 分岐経由の round splice、通常分岐の continuation ゼロ）を実機 E2E で確認（2026-10-15） |
 
 **0.2.1-alpha.1** での自動継続と Goal 再開の実発火も未確認です。**0.2.1-alpha.2** の宣言・ソース照合を実機検証完了とみなさず、その他の後続版も確認するまで互換性を前提にしません。
 

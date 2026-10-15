@@ -47,7 +47,7 @@ Latest DSH version with recorded verification: **0.2.1-alpha.3** (build and test
 | 0.2.0-rc.2 | Plugin load and inventory visibility verified |
 | 0.2.1-alpha.1 | Build, 13 tests, Web-profile config output, and startup load verified |
 | 0.2.1-alpha.2 | Declared in `engines.dsh` and DSH `peerDependencies`; upstream API compatibility reviewed, but runtime load, build/tests against the updated installation, and auto-continue/Goal resume E2E have **not** been verified on this version |
-| 0.2.1-alpha.3 | Build and 13 tests passing against the 0.2.1-alpha.3 dependency set on 2026-10-15; plugin listed in the web profile with zero startup plugin errors on 0.2.1-alpha.3; live auto-continue and Goal resume E2E remain **unverified** |
+| 0.2.1-alpha.3 | Build and 13 tests passing against the 0.2.1-alpha.3 dependency set on 2026-10-15; plugin listed in the web profile with zero startup plugin errors; real max-token auto-continue firing on the normal path (4 max-tokens turn ends, exactly 3 spliced `form: "notice"` continuations, then stop at `maxConsecutive`) and Goal resume via `--session-id` headless adoption (goal round spliced through the Goal branch, zero normal-path continuations) verified live on 2026-10-15 |
 
 Actual auto-continue and Goal resume firing on **0.2.1-alpha.1** has not yet been re-verified. For **0.2.1-alpha.2**, the declaration and source-level review must not be treated as completed live validation. Other newer DSH versions are not assumed compatible until verified.
 

@@ -35,7 +35,7 @@ The continuation text and delay are intentionally fixed rather than configurable
 
 ## Compatibility
 
-Latest DSH version with recorded verification: **0.2.1-alpha.1**. The package manifest also declares **0.2.1-alpha.2** as a compatibility target; a declared range is not proof of runtime compatibility.
+Latest DSH version with recorded verification: **0.2.1-alpha.3** (build and tests verified on 2026-10-15). The package manifest also declares **0.2.1-alpha.2** as a compatibility target; a declared range is not proof of runtime compatibility.
 
 | DSH version | Verification |
 | --- | --- |
@@ -47,6 +47,7 @@ Latest DSH version with recorded verification: **0.2.1-alpha.1**. The package ma
 | 0.2.0-rc.2 | Plugin load and inventory visibility verified |
 | 0.2.1-alpha.1 | Build, 13 tests, Web-profile config output, and startup load verified |
 | 0.2.1-alpha.2 | Declared in `engines.dsh` and DSH `peerDependencies`; upstream API compatibility reviewed, but runtime load, build/tests against the updated installation, and auto-continue/Goal resume E2E have **not** been verified on this version |
+| 0.2.1-alpha.3 | Build and 13 tests passing against the 0.2.1-alpha.3 dependency set on 2026-10-15; plugin listed in the web profile with zero startup plugin errors on 0.2.1-alpha.3; live auto-continue and Goal resume E2E remain **unverified** |
 
 Actual auto-continue and Goal resume firing on **0.2.1-alpha.1** has not yet been re-verified. For **0.2.1-alpha.2**, the declaration and source-level review must not be treated as completed live validation. Other newer DSH versions are not assumed compatible until verified.
 

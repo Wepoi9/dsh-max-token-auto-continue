@@ -28,14 +28,14 @@ DeepSeek Harness（DSH）向けのコミュニティ Host プラグインです�
 
 | 設定 | 既定値 | 意味 |
 | --- | ---: | --- |
-| `enabled` | `true` | 自動継続の総スイッチ |
+| `enabled` | `true` | 自動継続全体の有効・無効 |
 | `maxConsecutive` | `3` | 連続 max-token チェーンあたりの最大自動継続回数 |
 
 継続時のメッセージと遅延時間は、意図的に固定値としています。
 
 ## 互換性
 
-記録上、動作を確認できている最新版は **DSH 0.2.1-alpha.3** です（2026-10-15 にビルド・テストを確認済み）。manifest では **0.2.1-alpha.2** も対応対象として宣言していますが、この宣言は実機での動作を保証するものではありません。
+動作確認の記録がある最新版は **DSH 0.2.1-alpha.3** です（2026-10-15 にビルド・テストを確認済み）。manifest では **0.2.1-alpha.2** も対応対象として宣言していますが、この宣言は実機での動作を保証するものではありません。
 
 | DSH バージョン | 確認内容 |
 | --- | --- |
@@ -46,8 +46,8 @@ DeepSeek Harness（DSH）向けのコミュニティ Host プラグインです�
 | 0.2.0-rc.1 | 読み込み、一覧表示、max-tokens 後の自動継続を実機 E2E で確認 |
 | 0.2.0-rc.2 | 読み込み、一覧表示 |
 | 0.2.1-alpha.1 | ビルド、13件のテスト、Web profile の設定出力、起動時読み込み |
-| 0.2.1-alpha.2 | `engines.dsh` と DSH `peerDependencies` に対応対象として追加済み。DSH本体の関連APIはソース上で照合済み。ただし、この版での実機読み込み、更新済み依存環境でのビルド・テスト、自動継続と Goal 再開の実発火 E2E は **未確認** |
-| 0.2.1-alpha.3 | 0.2.1-alpha.3 依存系で build と 13 テスト通過（2026-10-15）。web profile に一覧表示され、起動時の plugin エラーなし。通常 session での max-tokens 後自動継続の実発火（max-tokens 終了 4 回、`form: "notice"` の continuation splice ちょうど 3 回、`maxConsecutive` で停止）と `--session-id` 採用 headless での Goal 再開（Goal 分岐経由の round splice、通常分岐の continuation ゼロ）を実機 E2E で確認（2026-10-15） |
+| 0.2.1-alpha.2 | `engines.dsh` と DSH `peerDependencies` に対応対象として追加済み。DSH本体の関連APIはソース上で照合済み。ただし、この版での実機読み込み、更新済み依存環境でのビルド・テスト、自動継続と Goal 再開の実際の発火を確認する E2E は **未確認** |
+| 0.2.1-alpha.3 | 0.2.1-alpha.3 の依存関係でビルドと13件のテストが通過（2026-10-15）。web profile に一覧表示され、起動時の plugin エラーなし。通常 session での max-tokens 後自動継続の実際の発火（max-tokens 終了 4 回、`form: "notice"` の continuation splice ちょうど 3 回、`maxConsecutive` で停止）と `--session-id` 採用 headless での Goal 再開（Goal 分岐経由の round splice、通常分岐の continuation ゼロ）を実機 E2E で確認（2026-10-15） |
 
 **0.2.1-alpha.1** での自動継続と Goal 再開の実発火も未確認です。**0.2.1-alpha.2** の宣言・ソース照合を実機検証完了とみなさず、その他の後続版も確認するまで互換性を前提にしません。
 
@@ -61,7 +61,7 @@ npm run build
 npm test
 ```
 
-このリポジトリのローカル checkout を対象 profile に追加します。
+このリポジトリをローカルにチェックアウトし、対象のプロファイルに追加します。
 
 ```sh
 dsh plugin --profile <profile> add <このリポジトリへの絶対パス>
@@ -95,7 +95,7 @@ TypeScript を `lib/` にコンパイルし、配布用エントリは `lib/src/
 
 ## コントリビューション
 
-バグ報告や範囲を絞った Pull Request を受け付けます。互換性問題では DSH バージョン、profile、通常セッションか `/goal` か、観測した `turn/end` reason、自動継続を期待したかを記載してください。
+バグ報告や範囲を絞った Pull Request を受け付けます。互換性問題では DSH バージョン、profile、通常セッションか `/goal` か、観測した `turn/end` reason、自動継続を期待していたかどうかを記載してください。
 
 ## ライセンス
 

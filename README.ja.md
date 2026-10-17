@@ -35,7 +35,7 @@ DeepSeek Harness（DSH）向けのコミュニティ Host プラグインです�
 
 ## 互換性
 
-動作確認の記録がある最新版は **DSH 0.2.1-rc.1** です（2026-10-17 にビルド・テストと実機 E2E を確認済み）。manifest では **0.2.1-alpha.2** も対応対象として宣言していますが、この宣言は実機での動作を保証するものではありません。
+動作確認の記録がある最新版は **DSH 0.2.1-rc.2** です（2026-10-17 にビルド・テストと実機 E2E を確認済み）。manifest では **0.2.1-alpha.2** も対応対象として宣言していますが、この宣言は実機での動作を保証するものではありません。
 
 | DSH バージョン | 確認内容 |
 | --- | --- |
@@ -49,6 +49,7 @@ DeepSeek Harness（DSH）向けのコミュニティ Host プラグインです�
 | 0.2.1-alpha.2 | `engines.dsh` と DSH `peerDependencies` に対応対象として追加済み。DSH本体の関連APIはソース上で照合済み。ただし、この版での実機読み込み、更新済み依存環境でのビルド・テスト、自動継続と Goal 再開の実際の発火を確認する E2E は **未確認** |
 | 0.2.1-alpha.3 | 0.2.1-alpha.3 の依存関係でビルドと13件のテストが通過（2026-10-15）。web profile に一覧表示され、起動時の plugin エラーなし。通常 session での max-tokens 後自動継続の実際の発火（max-tokens 終了 4 回、`form: "notice"` の continuation splice ちょうど 3 回、`maxConsecutive` で停止）と `--session-id` 採用 headless での Goal 再開（Goal 分岐経由の round splice、通常分岐の continuation ゼロ）を実機 E2E で確認（2026-10-15） |
 | 0.2.1-rc.1 | 0.2.1-rc.1 の依存関係でビルドと13件のテストが通過（2026-10-17）。rc.1 の compatibility preflight を拒否ゼロで通過し、web / mtac-test / mtac-sdk profile に一覧表示。通常 session での max-tokens 後自動継続の実際の発火（max-tokens 終了 4 回、`form: "notice"` の continuation splice ちょうど 3 回、本文が固定の継続メッセージと完全一致、`maxConsecutive` で停止）と `--session-id` 採用 headless での Goal 再開（Goal 分岐経由の round splice、通常分岐の continuation ゼロ）を実機 E2E で確認（2026-10-17） |
+| 0.2.1-rc.2 | `engines.dsh` と DSH `peerDependencies` 4 件に 0.2.1-rc.2 を宣言（devDependencies 追随、lockfile 更新）。0.2.1-rc.2 の依存関係でビルドと13件のテストが通過（2026-10-17）。web profile がプラグイン拒否ゼロで起動し、Plugin Manager の一覧に表示。通常 session での max-tokens 後自動継続の実際の発火（max-tokens 終了 4 回、`form: "notice"` の continuation splice ちょうど 3 回、本文が固定の継続メッセージと完全一致、`maxConsecutive` で停止）と `--session-id` 採用 headless での Goal 再開（Goal 分岐経由の round splice、通常分岐の continuation ゼロ）を実機 E2E で確認（2026-10-17） |
 
 **0.2.1-alpha.1** での自動継続と Goal 再開の実発火も未確認です。**0.2.1-alpha.2** の宣言・ソース照合を実機検証完了とみなさず、その他の後続版も確認するまで互換性を前提にしません。
 

@@ -35,7 +35,7 @@ The continuation text and delay are intentionally fixed rather than configurable
 
 ## Compatibility
 
-Latest DSH version with recorded verification: **0.2.1-rc.2** (build, tests, and live E2E verified on 2026-10-17). The package manifest also declares **0.2.1-alpha.2** as a compatibility target; a declared range is not proof of runtime compatibility.
+Latest DSH version with recorded verification: **0.2.2-alpha.2** (tests and live max-token E2E verified on 2026-10-29 against the 0.2.2-alpha.2 runtime); the previous lane **0.2.1-rc.2** was build-, test-, and live-verified on 2026-10-17. A declared range is not proof of runtime compatibility.
 
 | DSH version | Verification |
 | --- | --- |
@@ -50,8 +50,9 @@ Latest DSH version with recorded verification: **0.2.1-rc.2** (build, tests, and
 | 0.2.1-alpha.3 | Build and 13 tests passing against the 0.2.1-alpha.3 dependency set on 2026-10-15; plugin listed in the web profile with zero startup plugin errors; real max-token auto-continue firing on the normal path (4 max-tokens turn ends, exactly 3 spliced `form: "notice"` continuations, then stop at `maxConsecutive`) and Goal resume via `--session-id` headless adoption (goal round spliced through the Goal branch, zero normal-path continuations) verified live on 2026-10-15 |
 | 0.2.1-rc.1 | Build and 13 tests passing against the 0.2.1-rc.1 dependency set on 2026-10-17; plugin passes the rc.1 compatibility preflight with zero rejections and is listed in the web/mtac-test/mtac-sdk profiles; real max-token auto-continue firing on the normal path (4 max-tokens turn ends, exactly 3 spliced `form: "notice"` continuations carrying the exact fixed continuation text, then stop at `maxConsecutive`) and Goal resume via `--session-id` headless adoption (goal round spliced through the Goal branch, zero normal-path continuations) verified live on 2026-10-17 |
 | 0.2.1-rc.2 | `engines.dsh` and the four DSH `peerDependencies` declare 0.2.1-rc.2 (devDependencies repinned, lockfile updated); build and 13 tests passing against the 0.2.1-rc.2 dependency set on 2026-10-17; the web profile loads with zero plugin rejections and the plugin is listed in the Plugin Manager inventory; real max-token auto-continue firing on the normal path (4 max-tokens turn ends, exactly 3 spliced `form: "notice"` continuations carrying the exact fixed continuation text, then stop at `maxConsecutive`) and Goal resume via `--session-id` headless adoption (goal round spliced through the Goal branch, zero normal-path continuations) verified live on 2026-10-17 |
+| 0.2.2-alpha.2 | `engines.dsh` and the four DSH `peerDependencies` declare 0.2.2-alpha.2; Cordis peer range now includes 4.0.6-alpha.1 and its devDependency is pinned to that version to match the alpha.2 DSH package peers; DSH devDependencies are repinned and the lockfile updated; 13 tests passing on 2026-10-29; plugin listed in the Plugin Manager with zero rejections on the 0.2.2-alpha.2 runtime; real max-token auto-continue firing on the normal path (4 max-tokens turn ends, exactly 3 spliced `form: "notice"` continuations carrying the exact fixed continuation text, then stop at `maxConsecutive`) verified live in an isolated test profile on 2026-10-29; Goal resume not re-triggered on this version |
 
-Actual auto-continue and Goal resume firing on **0.2.1-alpha.1** has not yet been re-verified. For **0.2.1-alpha.2**, the declaration and source-level review must not be treated as completed live validation. Other newer DSH versions are not assumed compatible until verified.
+Actual auto-continue and Goal resume firing on **0.2.1-alpha.1** has not yet been re-verified. For **0.2.1-alpha.2**, the declaration and source-level review must not be treated as completed live validation. Versions later than 0.2.2-alpha.2 are not assumed compatible until verified.
 
 ## Install
 

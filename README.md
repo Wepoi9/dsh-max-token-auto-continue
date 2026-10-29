@@ -92,6 +92,8 @@ TypeScript is compiled to `lib/`; the distributable plugin entry is `lib/src/ind
 
 `@deepseek-ai/dsh-llm` is resolved at runtime from the DSH process entry so the plugin uses the host runtime copy.
 
+The devDependency chain pulls `zod` transitively (dev-only; the plugin itself ships no `zod`). An `overrides` entry pins it to `^4.6.6` so the lockfile stays clear of GHSA-mrhx-c7xc-m3w5 / CVE-2023-54404 (memory exhaustion while validating array schemas without a length bound, fixed in 4.6.6).
+
 ## Privacy
 
 The plugin does not persist session data and does not send data to external services. Its only session mutation is the bounded continuation message or Goal resume call described above.
